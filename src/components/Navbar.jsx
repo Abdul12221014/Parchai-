@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Button from '../ui/Button'
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const location = useLocation()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const handleScroll = () => {
@@ -15,9 +18,13 @@ export default function Navbar() {
 
     const scrollToSection = (id) => {
         setIsMobileMenuOpen(false)
-        const element = document.getElementById(id)
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' })
+        if (location.pathname !== '/') {
+            navigate('/', { state: { scrollTo: id } })
+        } else {
+            const element = document.getElementById(id)
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' })
+            }
         }
     }
 
@@ -38,13 +45,13 @@ export default function Navbar() {
                 </div>
 
                 <div className="navbar__cta">
-                    <Button
-                        href="https://forms.gle/nFpEEZSKGkfwhkNm6"
-                        ariaLabel="Start Session"
-                        shimmer={true}
+                    <Link
+                        to="/mentors"
+                        className="btn btn--primary btn--full"
+                        onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        Start Session
-                    </Button>
+                        Book a Session
+                    </Link>
                 </div>
 
                 {/* Mobile Menu Toggle */}
@@ -64,12 +71,9 @@ export default function Navbar() {
                     <button onClick={() => scrollToSection('contact')} className="navbar__mobile-link">Contact</button>
                     <button onClick={() => scrollToSection('founder')} className="navbar__mobile-link">About Founder</button>
                     <div style={{ marginTop: '24px' }}>
-                        <Button
-                            href="https://forms.gle/nFpEEZSKGkfwhkNm6"
-                            ariaLabel="Start Session"
-                        >
-                            Start Session
-                        </Button>
+                        <Link to="/mentors" className="btn btn--primary btn--sm">
+                            Book a Session
+                        </Link>
                     </div>
                 </div>
             </div>

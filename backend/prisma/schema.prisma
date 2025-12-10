@@ -1,0 +1,175 @@
+// Prisma schema for Parchai platform
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum UserRole {
+  USER
+  MENTOR
+  ADMIN
+}
+
+enum SessionStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  FAILED
+}
+
+enum PaymentGateway {
+  STRIPE
+  RAZORPAY
+}
+
+// Models
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  fullName      String    @map("full_name")
+  phone         String?
+  role          UserRole  @default(USER)
+  profileImage  String?   @map("profile_image")
+  emailVerified Boolean   @default(false) @map("email_verified")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  lastLogin     DateTime? @map("last_login")
+
+  // Relations
+  mentor          Mentor?
+  sessionsAsUser  Session[]  @relation("UserSessions")
+  paymentsAsUser  Payment[]  @relation("UserPayments")
+  reviewsGiven    Review[]   @relation("UserReviews")
+
+  @@map("users")
+}
+
+model Mentor {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId           String   @unique @map("user_id") @db.ObjectId
+  bio              String?
+  expertise        String[] // Array of specializations
+  hourlyRate       Float    @map("hourly_rate")
+  currency         String   @default("INR")
+  rating           Float    @default(0)
+  totalSessions    Int      @default(0) @map("total_sessions")
+  totalReviews     Int      @default(0) @map("total_reviews")
+  isVerified       Boolean  @default(false) @map("is_verified")
+  isAvailable      Boolean  @default(true) @map("is_available")
+  availabilityJson Json?    @map("availability_json") // Weekly schedule
+  videoIntroUrl    String?  @map("video_intro_url")
+  languages        String[]
+  yearsExperience  Int?     @map("years_experience")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions            Session[]            @relation("MentorSessions")
+  payments            Payment[]            @relation("MentorPayments")
+  reviews             Review[]             @relation("MentorReviews")
+  availabilitySlots   MentorAvailability[]
+
+  @@map("mentors")
+}
+
+model Session {
+  id                 String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String        @map("user_id") @db.ObjectId
+  mentorId           String        @map("mentor_id") @db.ObjectId
+  scheduledAt        DateTime      @map("scheduled_at")
+  durationMinutes    Int           @default(60) @map("duration_minutes")
+  status             SessionStatus @default(PENDING)
+  paymentStatus      PaymentStatus @default(PENDING) @map("payment_status")
+  amount             Float
+  platformFee        Float         @map("platform_fee")
+  meetingLink        String?       @map("meeting_link")
+  meetingId          String?       @map("meeting_id")
+  userNotes          String?       @map("user_notes")
+  mentorNotes        String?       @map("mentor_notes")
+  cancellationReason String?       @map("cancellation_reason")
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  user    User     @relation("UserSessions", fields: [userId], references: [id])
+  mentor  Mentor   @relation("MentorSessions", fields: [mentorId], references: [id])
+  payment Payment?
+  review  Review?
+
+  @@map("sessions")
+}
+
+model Payment {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId      String         @unique @map("session_id") @db.ObjectId
+  userId         String         @map("user_id") @db.ObjectId
+  mentorId       String         @map("mentor_id") @db.ObjectId
+  amount         Float
+  platformFee    Float          @map("platform_fee")
+  mentorPayout   Float          @map("mentor_payout")
+  currency       String         @default("INR")
+  paymentMethod  String?        @map("payment_method")
+  paymentGateway PaymentGateway @map("payment_gateway")
+  transactionId  String?        @map("transaction_id")
+  status         PaymentStatus  @default(PENDING)
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  session Session @relation(fields: [sessionId], references: [id])
+  user    User    @relation("UserPayments", fields: [userId], references: [id])
+  mentor  Mentor  @relation("MentorPayments", fields: [mentorId], references: [id])
+
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String   @unique @map("session_id") @db.ObjectId
+  userId    String   @map("user_id") @db.ObjectId
+  mentorId  String   @map("mentor_id") @db.ObjectId
+  rating    Int // 1-5
+  comment   String?
+  isPublic  Boolean  @default(true) @map("is_public")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  session Session @relation(fields: [sessionId], references: [id])
+  user    User    @relation("UserReviews", fields: [userId], references: [id])
+  mentor  Mentor  @relation("MentorReviews", fields: [mentorId], references: [id])
+
+  @@map("reviews")
+}
+
+model MentorAvailability {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  mentorId  String   @map("mentor_id") @db.ObjectId
+  dayOfWeek Int // 0-6 (0=Sunday)
+  startTime String   @map("start_time") // HH:MM format
+  endTime   String   @map("end_time") // HH:MM format
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  mentor Mentor @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+
+  @@map("mentor_availability")
+}

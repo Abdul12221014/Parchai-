@@ -1,0 +1,74 @@
+/* === MENTOR DASHBOARD === */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-base);
+    margin-bottom: var(--spacing-lg);
+}
+
+.stat-card {
+    background: var(--color-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-label {
+    color: var(--color-grey-400);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.stat-trend {
+    font-size: 13px;
+}
+
+.stat-trend.positive {
+    color: #4ade80;
+}
+
+.main-card {
+    grid-column: span 2;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.btn--text {
+    background: none;
+    border: none;
+    color: var(--color-accent-light);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.session-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media (max-width: 1024px) {
+    .main-card {
+        grid-column: span 1;
+    }
+}

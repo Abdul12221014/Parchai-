@@ -3,9 +3,8 @@ import Button from '../ui/Button'
 
 // Content
 const TITLE = "Try For Free"
-const DESCRIPTION = "Parchai is currently in early access. The first few clarity sessions are free."
-const CTA_TEXT = "Start Your Clarity Session"
-const GOOGLE_FORM_URL = "https://forms.gle/nFpEEZSKGkfwhkNm6"
+const DESCRIPTION = "Join thousands of mentees who found their path with Parchai."
+const CTA_TEXT = "Find a Mentor Now"
 
 export default function TryForFree() {
     return (
@@ -20,7 +19,7 @@ export default function TryForFree() {
                     {DESCRIPTION}
                 </p>
                 <Button
-                    href={GOOGLE_FORM_URL}
+                    to="/mentors"
                     ariaLabel="Start your free clarity session"
                 >
                     {CTA_TEXT}

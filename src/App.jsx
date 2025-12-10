@@ -1,29 +1,54 @@
-import React from 'react'
-import Hero from './components/Hero'
-import WhatIsParchai from './components/WhatIsParchai'
-import HowItWorks from './components/HowItWorks'
-import WhyItMatters from './components/WhyItMatters'
-import WhoIsItFor from './components/WhoIsItFor'
-import TryForFree from './components/TryForFree'
-import Founder from './components/Founder'
-import Contact from './components/Contact'
-
-import Navbar from './components/Navbar'
-
-// TODO: Add Google Tag Manager / Analytics script initialization here
-// Example: useEffect(() => { window.dataLayer = window.dataLayer || []; ... }, [])
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
+import MentorListingPage from './pages/MentorListingPage';
+import MentorProfilePage from './pages/MentorProfilePage';
+import MentorDashboardPage from './pages/MentorDashboardPage';
+import SettingsPage from './pages/SettingsPage';
+import NotificationToast from './ui/NotificationToast';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
     return (
-        <>
+        <BrowserRouter>
+            <NotificationToast />
+            <div id="founder"></div>
             <Navbar />
-            <Hero />
-            <div id="how-it-works"><HowItWorks /></div>
-            <div id="why-parchai"><WhyItMatters /></div>
-            <div id="stories"><WhoIsItFor /></div>
-            <TryForFree />
-            <div id="contact"><Contact /></div>
-            <div id="founder"><Founder /></div>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <DashboardPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="/mentors" element={<MentorListingPage />} />
+                <Route path="/mentors/:id" element={<MentorProfilePage />} />
+                <Route
+                    path="/mentor/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <MentorDashboardPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/settings"
+                    element={
+                        <ProtectedRoute>
+                            <SettingsPage />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
 
             <footer className="footer">
                 <div className="container">
@@ -70,8 +95,8 @@ function App() {
                     </div>
                 </div>
             </footer>
-        </>
-    )
+        </BrowserRouter>
+    );
 }
 
-export default App
+export default App;

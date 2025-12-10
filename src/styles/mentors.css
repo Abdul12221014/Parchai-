@@ -1,0 +1,176 @@
+/* === MENTOR LISTING PAGE === */
+.page-container {
+    padding-top: 100px;
+    min-height: 100vh;
+    background: var(--color-bg-premium);
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.page-header h1 {
+    margin-bottom: var(--spacing-xs);
+    background: linear-gradient(135deg, var(--color-white) 0%, var(--color-accent-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-header p {
+    color: var(--color-grey-400);
+    font-size: var(--font-size-lg);
+}
+
+/* Filters */
+.filters-section {
+    margin-bottom: var(--spacing-lg);
+    background: var(--color-bg-subtle);
+    padding: var(--spacing-base);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-group {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.search-input {
+    flex: 1;
+    background: rgba(2, 6, 23, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    color: var(--color-white);
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+/* Mentors Grid */
+.mentors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--spacing-base);
+    padding-bottom: var(--spacing-xl);
+}
+
+.mentor-card {
+    background: var(--color-bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-base);
+    transition: var(--transition-base);
+    display: flex;
+    flex-direction: column;
+}
+
+.mentor-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-hover);
+}
+
+.mentor-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.mentor-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-accent);
+}
+
+.mentor-info h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+    color: var(--color-white);
+}
+
+.mentor-rating {
+    color: var(--color-grey-400);
+    font-size: 14px;
+}
+
+.mentor-bio {
+    color: var(--color-grey-400);
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: var(--spacing-base);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.mentor-expertise {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: var(--spacing-base);
+}
+
+.tag {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--color-accent-light);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.mentor-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mentor-rate .amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.mentor-rate .unit {
+    font-size: 13px;
+    color: var(--color-grey-600);
+    margin-left: 4px;
+}
+
+.btn--sm {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.loading-state,
+.error-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--color-grey-400);
+    font-size: 18px;
+}
+
+.error-state {
+    color: #fca5a5;
+}
