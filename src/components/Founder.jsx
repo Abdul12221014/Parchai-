@@ -27,8 +27,10 @@ export default function Founder() {
                             style={{
                                 width: '160px',
                                 height: '160px',
-                                borderRadius: '50%',
                                 objectFit: 'cover',
+                                objectPosition: 'center',
+                                borderRadius: '50%',
+                                aspectRatio: '1/1',
                                 boxShadow: 'var(--shadow-lg)',
                                 border: '4px solid #fff'
                             }}

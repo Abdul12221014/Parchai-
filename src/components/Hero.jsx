@@ -16,8 +16,13 @@ export default function Hero() {
             <div className="hero__content fade-in delay-100" style={{ position: 'relative', zIndex: 2 }}>
                 <h1 style={{
                     fontSize: 'var(--font-size-h1)',
-                    color: 'var(--color-white)',
-                    marginBottom: 'var(--spacing-base)'
+                    background: 'linear-gradient(135deg, #ffffff 0%, #60a5fa 50%, #3b82f6 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    marginBottom: 'var(--spacing-base)',
+                    fontWeight: '800',
+                    letterSpacing: '-0.03em'
                 }}>{HEADLINE}</h1>
                 <p className="hero__subheadline" style={{ fontSize: '1.25rem', opacity: 0.9 }}>{SUBHEADLINE}</p>
                 <div className="fade-in delay-200" style={{ marginTop: '2rem' }}>

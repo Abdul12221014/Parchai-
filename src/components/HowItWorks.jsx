@@ -21,7 +21,7 @@ const STEPS = [
     },
     {
         number: "4",
-        title: "Follow-up after 7 days",
+        title: "7-Day Follow-up",
         description: "Check-in to see how you're progressing and answer any new questions."
     }
 ]
@@ -34,7 +34,7 @@ export default function HowItWorks() {
 
                 <div className="steps-container">
                     {/* Connecting Line (Desktop) */}
-                    <div className="steps-line"></div>
+
 
                     <div className="grid grid--4-col">
                         {STEPS.map((step) => (
