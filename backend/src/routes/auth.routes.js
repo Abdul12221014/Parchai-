@@ -7,6 +7,11 @@ import {
     login,
     refreshAccessToken,
     getMe,
+    register,
+    login,
+    googleLogin,
+    refreshAccessToken,
+    getMe,
     changePassword,
 } from '../controllers/auth.controller.js';
 
@@ -31,8 +36,10 @@ const changePasswordValidation = [
 ];
 
 // Routes
+router.get('/test', (req, res) => res.json({ status: 'Auth route working' }));
 router.post('/register', registerValidation, validate, register);
 router.post('/login', loginValidation, validate, login);
+router.post('/google', googleLogin);
 router.post('/refresh', refreshAccessToken);
 router.get('/me', protect, getMe);
 router.put('/change-password', protect, changePasswordValidation, validate, changePassword);

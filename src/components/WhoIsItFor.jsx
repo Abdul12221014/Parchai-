@@ -31,7 +31,7 @@ export default function WhoIsItFor() {
         <section className="section section--grey">
             <div className="container">
                 <SectionTitle>{TITLE}</SectionTitle>
-                <div className="grid grid--5-col">
+                <div className="grid grid--3-col">
                     {PERSONAS.map((persona, index) => (
                         <div key={index} className="card text-center">
                             <div style={{ fontSize: '32px', marginBottom: '16px' }}>

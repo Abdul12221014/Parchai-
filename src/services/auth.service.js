@@ -40,6 +40,16 @@ export const authService = {
         return response.data;
     },
 
+    // Login with Google
+    loginWithGoogle: async (idToken) => {
+        const response = await api.post('/auth/google', { idToken });
+        if (response.data.data.token) {
+            localStorage.setItem('token', response.data.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        }
+        return response.data;
+    },
+
     // Check if user is authenticated
     isAuthenticated: () => {
         return !!localStorage.getItem('token');

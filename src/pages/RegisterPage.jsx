@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { auth, googleProvider } from '../config/firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 export default function RegisterPage() {
     const navigate = useNavigate();
-    const { register, isLoading, error, clearError } = useAuthStore();
+    const { register, loginWithGoogle, isLoading, error, clearError } = useAuthStore();
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -44,6 +46,18 @@ export default function RegisterPage() {
         }
     };
 
+    const handleGoogleLogin = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const idToken = await result.user.getIdToken();
+            await loginWithGoogle(idToken);
+            navigate('/dashboard');
+        } catch (error) {
+            console.error(error);
+            // Store handles error state
+        }
+    };
+
     return (
         <div className="auth-page">
             <div className="auth-container">
@@ -58,6 +72,35 @@ export default function RegisterPage() {
                             {error || validationError}
                         </div>
                     )}
+
+                    <button
+                        type="button"
+                        className="btn btn--outline btn--full"
+                        onClick={handleGoogleLogin}
+                        disabled={isLoading}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '12px',
+                            marginBottom: '24px',
+                            borderColor: 'var(--color-border)'
+                        }}
+                    >
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
+                        Sign up with Google
+                    </button>
+
+                    <div style={{
+                        textAlign: 'center',
+                        fontSize: '0.875rem',
+                        color: 'var(--color-text-secondary)',
+                        margin: '-8px 0 24px',
+                        position: 'relative'
+                    }}>
+                        <span style={{ background: 'var(--color-bg-card)', padding: '0 12px', position: 'relative', zIndex: 1 }}>or sign up with email</span>
+                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'var(--color-border)', zIndex: 0 }}></div>
+                    </div>
 
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">

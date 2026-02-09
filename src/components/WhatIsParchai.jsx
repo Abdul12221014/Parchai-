@@ -7,7 +7,7 @@ const DESCRIPTION = `Parchai is a clarity system that helps people understand th
 
 It's not coaching. It's not therapy.
 
-It's a human-first decision mapping system powered by empathy and AI.`
+It's a human-first decision mapping system where AI serves as an assistant — helping surface patterns, not prescribe paths. Human judgment and your autonomy remain central to every step.`
 
 export default function WhatIsParchai() {
     return (

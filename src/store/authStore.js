@@ -47,6 +47,26 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    // Login with Google
+    loginWithGoogle: async (idToken) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await authService.loginWithGoogle(idToken);
+            set({
+                user: response.data.user,
+                isAuthenticated: true,
+                isLoading: false,
+            });
+            return response;
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || 'Google Login failed',
+                isLoading: false,
+            });
+            throw error;
+        }
+    },
+
     // Logout
     logout: () => {
         authService.logout();

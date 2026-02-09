@@ -24,7 +24,7 @@ app.use(helmet());
 
 // CORS
 app.use(cors({
-    origin: config.frontendUrl,
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', config.frontendUrl],
     credentials: true,
 }));
 

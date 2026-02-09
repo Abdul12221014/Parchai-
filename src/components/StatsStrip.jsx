@@ -65,18 +65,11 @@ export default function StatsStrip() {
     }, [isVisible]);
 
     return (
-        <section ref={sectionRef} className="section" style={{
-            background: 'var(--color-bg-subtle)',
-            borderBottom: '1px solid rgba(59, 130, 246, 0.1)',
-            padding: 'var(--spacing-lg) 0'
+        <section ref={sectionRef} className="section section-stats" style={{
+            /* background/padding handled by CSS class now */
         }}>
             <div className="container">
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: '2rem',
-                    textAlign: 'center'
-                }}>
+                <div className="grid grid--3-col text-center">
                     {stats.map((stat, index) => (
                         <div key={index} className="stat-item fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                             <div style={{

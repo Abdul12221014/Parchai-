@@ -188,7 +188,91 @@ export const getMe = async (req, res, next) => {
     }
 };
 
-// Change password
+// Google Login
+export const googleLogin = async (req, res, next) => {
+    try {
+        const { idToken } = req.body;
+
+        if (!idToken) {
+            return next(new AppError('Firebase ID token is required', 400));
+        }
+
+        // Verify Firebase token
+        // Note: admin must be initialized in app entry point or config
+        const admin = await import('firebase-admin');
+
+        // Dynamic import or singleton usage recommended. 
+        // For now, assuming standard firebase-admin setup in config/firebase.js
+        const { default: firebaseApp } = await import('../config/firebase.js');
+
+        const decodedToken = await firebaseApp.auth().verifyIdToken(idToken);
+        const { email, name, picture, uid } = decodedToken;
+
+        if (!email) {
+            return next(new AppError('Google account must have an email', 400));
+        }
+
+        // Check if user exists
+        let user = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (!user) {
+            // Register new user
+            user = await prisma.user.create({
+                data: {
+                    email,
+                    fullName: name || 'User',
+                    profileImage: picture,
+                    passwordHash: '', // No password for Google users
+                    isActive: true,
+                    emailVerified: true, // Google emails are verified
+                    googleId: uid
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    fullName: true,
+                    role: true,
+                    createdAt: true,
+                },
+            });
+        } else {
+            // Update existing user with Google info if needed
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    lastLogin: new Date(),
+                    // Optionally update profile pic or googleId if not present
+                    ...(picture && !user.profileImage ? { profileImage: picture } : {}),
+                    ...(!user.googleId ? { googleId: uid } : {})
+                }
+            });
+        }
+
+        // Generate tokens
+        const token = generateToken(user.id, user.role);
+        const refreshToken = generateRefreshToken(user.id);
+
+        // Remove password from output (if any)
+        const { passwordHash, ...userWithoutPassword } = user;
+
+        res.json({
+            status: 'success',
+            data: {
+                user: userWithoutPassword,
+                token,
+                refreshToken,
+            },
+        });
+
+    } catch (error) {
+        console.error('Google Auth Error:', error);
+        return next(new AppError('Google authentication failed', 401));
+    }
+};
+
+// Change password (existing)
 export const changePassword = async (req, res, next) => {
     try {
         const { currentPassword, newPassword } = req.body;
@@ -201,6 +285,11 @@ export const changePassword = async (req, res, next) => {
         const user = await prisma.user.findUnique({
             where: { id: req.user.id },
         });
+
+        // If user has no password (Google auth only), they can't change it this way
+        if (!user.passwordHash) {
+            return next(new AppError('Account uses Google Sign-In. Please set a password first.', 400));
+        }
 
         // Verify current password
         const isPasswordValid = await bcrypt.compare(currentPassword, user.passwordHash);

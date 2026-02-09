@@ -34,9 +34,9 @@ export default function HowItWorks() {
 
                 <div className="steps-container">
                     {/* Connecting Line (Desktop) */}
+                    {/* Note: The connector line is handled by the pseudo-element in .step-card CSS (globals.css) */}
 
-
-                    <div className="grid grid--4-col">
+                    <div className="grid grid--2-col">
                         {STEPS.map((step) => (
                             <div key={step.number} className="step-card text-center">
                                 <div className="step-number">
